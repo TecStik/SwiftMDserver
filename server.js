@@ -376,7 +376,7 @@ app.post("/takeAppointment", (req, res, next) => {
                 `)
         return;
     } else {
-        Clinic.findOne({ _id: req.body.Clinic_ID }, (err, data) => {
+        Clinic.findOne({ ActiveClinicId: req.body.Clinic_ID }, (err, data) => {
             if (err) {
                 console.log(err, "error");
             } else {
