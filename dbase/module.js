@@ -121,6 +121,7 @@ var SummarySchema = mongoose.Schema({
     SClinicOpenTime: String,
     SClinicCloseTime: String,
     SClinicDate: String,
+    SActiveClinicId:String,
     SClinicTotalPatient: String,
     SClinicCollection: String,
     SClinicBelonTo: String,

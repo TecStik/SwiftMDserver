@@ -837,7 +837,7 @@ app.post('/summaryData', (req, res) => {
                 // console.log(data, "data");
             }
 
-            Clinic.findById({ _id: req.body.ClinicObjectId }, (error, doc) => {
+            Clinic.findById({ ActiveClinicId: req.body.ClinicObjectId }, (error, doc) => {
 
                 if (!err) {
                     // res.send({
