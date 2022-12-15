@@ -830,22 +830,22 @@ app.post('/summaryData', (req, res) => {
         let TotalPatient = 0;
 
         Appointment.find({ AppointmentClinicObjID: req.body.ClinicObjectId }, (err, data) => {
-
+console.log("req.body.ClinicObjectId",req.body.ClinicObjectId);
             for (let i = 0; i < data.length; i++) {
                 TotalAmount += data[i].CollectedAmount;
                 TotalPatient = data.length
-                // console.log(data, "data");
+                console.log(data, "data");
             }
 
-            Clinic.findById({ ActiveClinicId: req.body.ClinicObjectId }, (error, doc) => {
+            Clinic.findOne({ ActiveClinicId: req.body.ClinicObjectId }, (error, doc) => {
 
-                if (!err) {
+                if (!err&& doc) {
                     // res.send({
                     //     ClinicData: doc,
                     //     TotalAmount: TotalAmount,
                     //     TotalPatient: TotalPatient,
                     // })
-
+console.log("doc in summary",doc);
                     const newSummary = new Summary({
                         SClinicId: doc._id,
                         SClinicName: doc.ClinicDoctorName,
@@ -867,7 +867,7 @@ app.post('/summaryData', (req, res) => {
                         })
                     });
 
-                } else { res.send(error) }
+                } else { res.send("error in finding clinic"+error) }
             })
             console.log(TotalPatient, TotalAmount, "addAmount");
         })
