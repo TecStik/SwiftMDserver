@@ -852,6 +852,7 @@ app.post('/summaryData', (req, res) => {
                         SClinicOpenTime: doc.ClinicStartingTime,
                         SClinicCloseTime: doc.ClinicEndTime,
                         SClinicDate: doc.createdOn,
+                        SActiveClinicId: doc.ActiveClinicId,
                         SClinicTotalPatient: TotalPatient,
                         SClinicCollection: TotalAmount,
                         SClinicBelonTo: doc.BelongsTo
