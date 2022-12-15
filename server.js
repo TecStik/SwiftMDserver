@@ -867,7 +867,7 @@ console.log("doc in summary",doc);
                         })
                     });
 
-                } else { res.send("error in finding clinic"+err) }
+                } else { res.status(409).send("error in finding clinic "+err) }
             })
             console.log(TotalPatient, TotalAmount, "addAmount");
         })
