@@ -832,7 +832,7 @@ app.post('/summaryData', (req, res) => {
         Appointment.find({ AppointmentClinicObjID: req.body.ClinicObjectId }, (err, data) => {
 console.log("req.body.ClinicObjectId",req.body.ClinicObjectId);
             for (let i = 0; i < data.length; i++) {
-                TotalAmount += data[i].CollectedAmount;
+                TotalAmount += parseInt(data[i].CollectedAmount);
                 TotalPatient = data.length
                 console.log(data, "data");
             }
