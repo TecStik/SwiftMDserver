@@ -832,9 +832,11 @@ app.post('/summaryData', (req, res) => {
         Appointment.find({ AppointmentClinicObjID: req.body.ClinicObjectId }, (err, data) => {
 console.log("req.body.ClinicObjectId",req.body.ClinicObjectId);
             for (let i = 0; i < data.length; i++) {
-                TotalAmount += parseInt(data[i].CollectedAmount);
+                TotalAmount += (isNaN(parseInt(data[i].CollectedAmount)))?0:parseInt(data[i].CollectedAmount);
+                console.log("Amount in collect",isNaN(data[i].CollectedAmount))
                 TotalPatient = data.length
                 console.log(data, "data");
+                console.log("summary",TotalAmount,TotalPatient)
             }
 
             Clinic.findOne({ ActiveClinicId: req.body.ClinicObjectId }, (error, doc) => {
