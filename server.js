@@ -765,6 +765,12 @@ app.put('/CollectedAmountApi', (req, res) => {
         },
             (err, data) => {
                 if (!err) {
+                res.send(data);
+                }else{
+                    res.status(409).send("error :"+err);
+                }
+           /*
+                if (!err) {
 
                     let receiver = data.AppointmentNumber
                     let receiverEmail = data.AppointmentEmail
@@ -789,7 +795,7 @@ app.put('/CollectedAmountApi', (req, res) => {
 
                     console.log(options, "options");
                     console.log(receiver, "receiver");
-                    req.end();
+                    req.send();
 
 
                     // Send OTP with Email
@@ -812,7 +818,7 @@ app.put('/CollectedAmountApi', (req, res) => {
                     res.send("collected amount didn't recived!")
                 } else {
                     res.send(err)
-                }
+                }*/
 
             })
     }
