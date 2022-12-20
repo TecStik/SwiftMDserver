@@ -29,19 +29,74 @@ app.use("/auth", authRoutes)
 
 
 const transporter = nodemailer.createTransport({
-    host: 'smtpout.secureserver.net',
+    host: "mail.tecstik.com",
     port: 465,
     auth: {
-        user: 'info@tecstik.com',
-        pass: 'anostrat'
-    }
-});
+      user: "appSupport@tecstik.com",
+      pass: "TecstikApps#123",
+    },
+  });
 
 // Random Number
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+// sendSMS
+
+function sendSMS(data) {
+    
+    let receiver = data.AppointmentNumber
+    // console.log(receiver, data, "reeoe");
+    
+    let textmessage = `Thank you, your payment of Rs ${data.CollectedAmount} is received`;
+    
+    let options = {
+        host: 'api.veevotech.com',
+        path: "/sendsms?hash=" + APIKey + "&receivenum=" + receiver + "&sendernum=" + encodeURIComponent(sender) + "&textmessage=" + encodeURIComponent(textmessage),
+        method: 'GET',
+        setTimeout: 30000
+    };
+
+    let req = http.request(options, (res) => {
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => { console.log(chunk.toString()) });
+        console.log('STATUS: ' + res.statusCode);
+    });
+    req.on('error', function (e) {
+        console.log('problem with request: ' + e.message);
+    });
+    
+    console.log(options, "options");
+    console.log(receiver, "receiver");
+    // req.send();
+}
+
+// sendEmail
+
+function sendEmail(data) {
+    // console.log(data);
+
+    let receiverEmail = data.AppointmentEmail
+    
+    let mailOptions = {
+        from: "appSupport@tecstik.com",
+        to: receiverEmail,
+        subject: 'Payment verify OTP',
+        html: `<h1>Thank you, your payment of Rs.${data.CollectedAmount} is received</h1>`
+    }
+    
+    
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log("error=>", error);
+        } else {
+            console.log('Email sent: =>' + info.response);
+        }
+    });
+}
+
 
 //Post All Api with PatientData 
 
@@ -366,7 +421,7 @@ app.post('/filteredPatients', (req, res, next) => {
 
 // API to take appointment, update last issued clinic number and sends the newly created appointment to user
 app.post("/takeAppointment", (req, res, next) => {
-    var newNumber = 0;
+    let newNumber = 0;
     if (!req.body.Clinic_ID) {
 
         res.status(409).send(`
@@ -406,7 +461,7 @@ app.post("/takeAppointment", (req, res, next) => {
 
 app.post("/getAppointment", (req, res) => {
 
-    var newNumber = 0;
+    let newNumber = 0;
 
     if (!req.body.ClinicObjectId) {
 
@@ -689,7 +744,7 @@ app.post('/checkAppointmentAndCreateAppoint', (req, res) => {
 //  Delet Appointment And Update Appointment
 app.post('/deletAppointmentCraeteNewApp', (req, res) => {
 
-    var newNumber = 0
+    let newNumber = 0
     if (!req.body.ClinicObjectId || !req.body.AppointmentUserObjectID) {
         res.status(409).send(` 
         SEnd Clinic Objext Id
@@ -766,59 +821,19 @@ app.put('/CollectedAmountApi', (req, res) => {
             (err, data) => {
                 if (!err) {
                 res.send(data);
+                sendSMS(data)
+                sendEmail(data)
                 }else{
-                    res.status(409).send("error :"+err);
-                }
-           /*
-                if (!err) {
-
-                    let receiver = data.AppointmentNumber
-                    let receiverEmail = data.AppointmentEmail
-                    console.log(receiver, receiverEmail, data, "reeoe");
-
-                    let textmessage = `Thank you, your payment of Rs ${data.CollectedAmount} is received`;
-
-                    let options = {
-                        host: 'api.veevotech.com',
-                        path: "/sendsms?hash=" + APIKey + "&receivenum=" + receiver + "&sendernum=" + encodeURIComponent(sender) + "&textmessage=" + encodeURIComponent(textmessage),
-                        method: 'GET',
-                        setTimeout: 30000
-                    };
-                    // let req = http.request(options, (res) => {
-                    //     res.setEncoding('utf8');
-                    //     res.on('data', (chunk) => { console.log(chunk.toString()) });
-                    //     console.log('STATUS: ' + res.statusCode);
-                    // });
-                    // req.on('error', function (e) {
-                    //     console.log('problem with request: ' + e.message);
-                    // });
-
-                    console.log(options, "options");
-                    console.log(receiver, "receiver");
-                    req.send();
-
-
-                    // Send OTP with Email
-                    var mailOptions = {
-                        from: 'info@tecstik.com',
-                        to: receiverEmail,
-                        subject: 'Payment verify OTP',
-                        html: `<h1>Thank you, your payment of Rs.${data.CollectedAmount} is received</h1>`
-                    }
-
-
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            console.log("error=>", error);
-                        } else {
-                            console.log('Email sent: =>' + info.response);
-                        }
-                    });
-
-                    res.send("collected amount didn't recived!")
-                } else {
+                    // res.status(409).send("error :"+err);
                     res.send(err)
-                }*/
+                }
+           
+                // if (!err) {
+                //     // Send OTP with Email
+                //     res.send("collected amount didn't recived!")
+                // } else {
+                //     res.send(err)
+                // }
 
             })
     }
