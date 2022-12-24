@@ -96,12 +96,12 @@ app.post('/login', (req, res, next) => {
 app.post("/ChangePassword", (req, res, next) => {
     console.log(req.body.userPassword);
     if (!req.body.userObjectId) {
-  res.send("empolyeeObjectId has been required")
+  res.send("userObjectId is required")
     } else {
         User.findById({ _id: req.body.userObjectId }, (err, doc) => {
             if (!err) {
                 console.log("doc ",doc);
-                if (req.body.UserPassword === doc.userPassword) {
+                if (req.body.userPassword === doc.UserPassword) {
                     doc.update({ UserPassword: req.body.newPassword }, {}, function (err, data) {
                         console.log("password updated");
                         res.send("Password has been Change Successfull")
@@ -117,7 +117,32 @@ app.post("/ChangePassword", (req, res, next) => {
   })
 
 
-
+  // forget password
+app.post("/forgetPassword", (req, res, next) => {
+    
+    if (!req.body.userId) {
+  res.send("userId is  required")
+    } else {
+        User.findOne({ UserEmail: req.body.userId}, (err, doc) => {
+            if (!err) {
+                console.log("doc ",doc);
+                let newPassword= getRandomArbitrary(100, 1000);
+                console.log("New password",newPassword)
+               
+                    doc.update({ UserPassword: newPassword }, {}, function (err, data) {
+                        console.log("password updated",);
+                        res.send("temporary password is sent "+newPassword);
+                    })
+               
+                } else {
+              res.send("Empolyee not found");
+            }
+        })
+    }
+  })
+  function getRandomArbitrary(min, max) {
+    return Math.floor( Math.random() * (max - min) + min);
+}
 // =======================export
 module.exports = app
 
