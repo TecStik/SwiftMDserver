@@ -42,7 +42,7 @@ app.post('/User', (req, res, next) => {
                 })
             } else {
                 res.status(409).send({
-                    message: "employee alredy access"
+                    message: "employee alredy exist"
                 })
             }
         }
@@ -91,6 +91,31 @@ app.post('/login', (req, res, next) => {
         }
     })
 })
+
+// change password
+app.post("/ChangePassword", (req, res, next) => {
+    console.log(req.body.userPassword);
+    if (!req.body.userObjectId) {
+  res.send("empolyeeObjectId has been required")
+    } else {
+        User.findById({ _id: req.body.userObjectId }, (err, doc) => {
+            if (!err) {
+                console.log("doc ",doc);
+                if (req.body.UserPassword === doc.userPassword) {
+                    doc.update({ UserPassword: req.body.newPassword }, {}, function (err, data) {
+                        console.log("password updated");
+                        res.send("Password has been Change Successfull")
+                    })
+                } else {
+                   res.send("Please Correct the Password");
+                  }
+                } else {
+              res.send("Empolyee not found");
+            }
+        })
+    }
+  })
+
 
 
 // =======================export
