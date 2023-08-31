@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 
 //  Create User
 app.post("/User", (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.loginId || !req.body.password) {
     res.status(403).send(
       `please send email and passwod in json body.
             e.g:
@@ -33,13 +33,14 @@ app.post("/User", (req, res, next) => {
     );
     return;
   } else {
-    User.findOne({ UserEmail: req.body.email }, (err, doc) => {
+    User.findOne({ loginId: req.body.loginId }, (err, doc) => {
       if (!err && !doc) {
         let UserCreate = new User({
           UserName: req.body.name,
           UserNumber: req.body.number,
           UserEmail: req.body.email,
           UserPassword: req.body.password,
+          loginId: req.body.loginId,
           createdBy: req.body.createdBy,
           Role: req.body.Role,
         });
@@ -63,18 +64,18 @@ app.post("/User", (req, res, next) => {
 
 // User Login
 app.post("/login", (req, res, next) => {
-  if (!req.body.email || !req.body.password) {
+  if (!req.body.loginId || !req.body.password) {
     res.status(403).send(
-      `please send email and passwod in json body.
+      `please send loginId and passwod in json body.
             e.g:
              {
-            "email": "Razamalik@gmail.com",
+            "loginId": "03022639133",
             "password": "abc",
          }`
     );
     return;
   }
-  User.findOne({ UserEmail: req.body.email }, (err, doc) => {
+  User.findOne({ loginId: req.body.loginId }, (err, doc) => {
     if (!doc) {
       res.status(403).send({
         message: "Empolyee not found",
@@ -207,8 +208,51 @@ app.post("/forgetPassword", (req, res, next) => {
     });
   }
 });
+
+
+app.post("/UpdateEmpolyee", (req, res, next) => {
+  if (!req.body.filter || !req.body.Update) {
+    res.status(409).send(`
+          Please send filter in json body
+          e.g:
+          "filter":"{}",
+      `);
+  } else {
+    User.findOneAndUpdate(req.body.filter, req.body.Update, (err, data) => {
+      if (!err) {
+        res.send({
+          data: data,
+          message: "Empolyee Update",
+          status: 200,
+        });
+      } else {
+        res.status(500).send("error");
+      }
+    });
+  }
+});
+
+app.post("/filteredEmployee", (req, res, next) => {
+  if (!req.body.filter) {
+    res.status(409).send(`
+        Please send filter in json body
+        e.g:
+        "filter":"{}",
+    `);
+  } else {
+    User.find(req.body.filter, (err, doc) => {
+      if (!err) {
+        res.send(doc);
+      } else {
+        res.send(err);
+      }
+    });
+  }
+});
+
 function getRandomArbitrary(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
+
 // =======================export
 module.exports = app;
