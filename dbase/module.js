@@ -75,18 +75,18 @@ var ClinicSchema = mongoose.Schema({
 var Clinic = mongoose.model("Clinics", ClinicSchema);
 
 var AppointmentSchema = mongoose.Schema({
-  AppointmentName: String,
-  AppointmentNumber: String,
-  AppointmentMRNum: String, //
   Appointment: String,
+  AppointmentName: String,
   AppointmentEmail: String,
+  AppointmentMRNum: String, //
+  AppointmentNumber: String,
   AppointmentUserObjectID: String,
-  Status: String,
-  AttendedAt: Date,
-  DischargedAt: Date,
-  LeftAt: Date,
-  CollectedAmount: Number,
   AppointmentClinicObjID: String, //
+  CollectedAmount: Number,
+  DischargedAt: Date,
+  AttendedAt: Date,
+  Status: String,
+  LeftAt: Date,
   createdOn: { type: Date, default: Date.now },
 });
 
@@ -95,12 +95,14 @@ var Appointment = mongoose.model("Appointments", AppointmentSchema);
 // Appointment Data End
 
 var UserSchema = mongoose.Schema({
-  UserName: String,
-  UserNumber: String,
-  UserEmail: String,
-  UserPassword: String,
-  createdBy: String,
   Role: String,
+  loginId: String,
+  UserName: String,
+  createdBy: String,
+  UserEmail: String,
+  UserNumber: String,
+  UserPassword: String,
+  ScendryContact: String,
   createdOn: { type: Date, default: Date.now },
 });
 // Update
@@ -111,11 +113,11 @@ var SummarySchema = mongoose.Schema({
   SClinicName: String,
   SClinicOpenTime: String,
   SClinicCloseTime: String,
-  SClinicDate: String,
-  SActiveClinicId: String,
   SClinicTotalPatient: String,
   SClinicCollection: String,
+  SActiveClinicId: String,
   SClinicBelonTo: String,
+  SClinicDate: String,
   createdOn: { type: Date, default: Date.now },
 });
 // Update
