@@ -210,7 +210,7 @@ app.post("/forgetPassword", (req, res, next) => {
 });
 
 
-app.post("/UpdateEmpolyee", (req, res, next) => {
+app.put("/UpdateEmployee", (req, res, next) => {
   if (!req.body.filter || !req.body.Update) {
     res.status(409).send(`
           Please send filter in json body
