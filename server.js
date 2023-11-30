@@ -231,6 +231,29 @@ app.put('/UpdateFilteredAppointment', (req, res, next) => {
 })
 
 
+// update filtered  Patient
+app.put('/UpdateFilteredPatient', (req, res, next) => {
+    if (!req.body.filter || !req.body.update) {
+        res.status(409).send(`
+        Please send filter and update in json body
+        e.g:
+        "filter":"{}",
+        "update":"{}"
+    `)
+    } else {
+        Patient.findOneAndUpdate(req.body.filter, req.body.update,
+            (err, doc) => {
+
+                if (doc) {
+                    res.send(doc)
+                } else {
+                    res.send(err, "ERROR")
+                }
+
+            });
+    }
+})
+
 // update filtered  clinic
 app.put('/UpdateFilteredClinic', (req, res, next) => {
     if (!req.body.filter || !req.body.update) {
